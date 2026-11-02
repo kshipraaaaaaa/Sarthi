@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
-
+from .models import EmergencyContact
+from .forms import EmergencyContactForm
 from .forms import AssistanceRequestForm
 from .models import AssistanceRequest
 
@@ -130,3 +131,71 @@ def volunteer_activities(request):
         'assistance/volunteer_activities.html',
         {'activities': activities}
     )
+@login_required
+def emergency_contacts(request):
+    if request.user.role != 'student':
+        return redirect('dashboard')
+
+    contacts = EmergencyContact.objects.filter(student=request.user)
+
+    if request.method == 'POST':
+        form = EmergencyContactForm(request.POST)
+        if form.is_valid():
+            contact = form.save(commit=False)
+            contact.student = request.user
+
+            if contact.is_primary:
+                EmergencyContact.objects.filter(
+                    student=request.user
+                ).update(is_primary=False)
+
+            contact.save()
+            messages.success(request, 'Emergency contact added successfully!')
+            return redirect('emergency_contacts')
+    else:
+        form = EmergencyContactForm()
+
+    return render(request, 'assistance/emergency_contacts.html', {
+        'contacts': contacts,
+        'form': form
+    })
+
+
+@login_required
+def edit_emergency_contact(request, contact_id):
+    contact = get_object_or_404(
+        EmergencyContact, id=contact_id, student=request.user
+    )
+
+    if request.method == 'POST':
+        form = EmergencyContactForm(request.POST, instance=contact)
+        if form.is_valid():
+            updated = form.save(commit=False)
+
+            if updated.is_primary:
+                EmergencyContact.objects.filter(
+                    student=request.user
+                ).exclude(id=contact.id).update(is_primary=False)
+
+            updated.save()
+            messages.success(request, 'Contact updated!')
+            return redirect('emergency_contacts')
+    else:
+        form = EmergencyContactForm(instance=contact)
+
+    return render(request, 'assistance/edit_emergency_contact.html', {
+        'form': form
+    })
+
+
+@login_required
+def delete_emergency_contact(request, contact_id):
+    contact = get_object_or_404(
+        EmergencyContact, id=contact_id, student=request.user
+    )
+
+    if request.method == 'POST':
+        contact.delete()
+        messages.success(request, 'Contact deleted!')
+
+    return redirect('emergency_contacts')

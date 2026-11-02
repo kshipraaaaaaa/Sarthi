@@ -14,15 +14,21 @@ class RegistrationForm(UserCreationForm):
             'first_name',
             'last_name',
             'email',
-            'role'
+            'role',
+            'gender',
+            'age',
+            'contact_no',
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['role'].choices = [
-    ('student', 'Student'),
-    ('parent', 'Parent / Caregiver'),
-    ('nss_volunteer', 'NSS Volunteer'),
-    ('community_volunteer', 'Community Volunteer'),
-]
+            ('student', 'Student'),
+            ('parent', 'Parent / Caregiver'),
+            ('nss_volunteer', 'NSS Volunteer'),
+            ('community_volunteer', 'Community Volunteer'),
+    ]
+        self.fields['gender'].required = True
+        self.fields['age'].required = True
+        self.fields['contact_no'].required = True
