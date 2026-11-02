@@ -33,8 +33,8 @@ class EmergencyContactForm(forms.ModelForm):
                 'placeholder': 'Enter phone number',
                 'type': 'tel'
             }),
-<<<<<<< HEAD
+
         }
-=======
-        }
->>>>>>> 76cf243eae122f813441e65b8308508eacd78299
+
+        
+
