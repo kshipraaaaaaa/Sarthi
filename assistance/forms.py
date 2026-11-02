@@ -1,20 +1,11 @@
-
-
 from django import forms
 from .models import AssistanceRequest, EmergencyContact
 
 
 class AssistanceRequestForm(forms.ModelForm):
-
     class Meta:
         model = AssistanceRequest
-        fields = [
-            'service',
-            'date',
-            'time',
-            'venue',
-            'description'
-        ]
+        fields = ['service', 'date', 'time', 'venue', 'description']
 
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
@@ -27,15 +18,9 @@ class AssistanceRequestForm(forms.ModelForm):
 
 
 class EmergencyContactForm(forms.ModelForm):
-
     class Meta:
         model = EmergencyContact
-        fields = [
-            'name',
-            'relationship',
-            'phone',
-            'is_primary'
-        ]
+        fields = ['name', 'relationship', 'phone', 'is_primary']
 
         widgets = {
             'name': forms.TextInput(attrs={
