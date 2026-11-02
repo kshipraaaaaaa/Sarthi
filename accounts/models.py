@@ -10,6 +10,21 @@ class User(AbstractUser):
         ('nss_volunteer', 'NSS Volunteer'),
         ('community_volunteer', 'Community Volunteer'),
     ]
+    GENDER_CHOICES = [
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+    ('Other', 'Other'),
+    ('Prefer not to say', 'Prefer not to say'),
+]
+
+gender = models.CharField(
+    max_length=30,
+    choices=GENDER_CHOICES
+)
+
+age = models.PositiveSmallIntegerField()
+
+contact_no = models.CharField(max_length=15)
 
     role = models.CharField(
         max_length=30,
