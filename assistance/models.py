@@ -68,8 +68,6 @@ class EmergencyContact(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-<<<<<<< HEAD
         return f"{self.name} - {self.student.username}"
-=======
-        return f"{self.name} - {self.student.username}"
->>>>>>> 76cf243eae122f813441e65b8308508eacd78299
+
+        
