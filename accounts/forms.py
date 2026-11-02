@@ -29,3 +29,6 @@ class RegistrationForm(UserCreationForm):
     ('nss_volunteer', 'NSS Volunteer'),
     ('community_volunteer', 'Community Volunteer'),
 ]
+self.fields['gender'].required = True
+    self.fields['age'].required = True
+    self.fields['contact_no'].required = True
