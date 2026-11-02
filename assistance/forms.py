@@ -1,4 +1,5 @@
 
+
 from django import forms
 from .models import AssistanceRequest, EmergencyContact
 
@@ -7,7 +8,6 @@ class AssistanceRequestForm(forms.ModelForm):
 
     class Meta:
         model = AssistanceRequest
-
         fields = [
             'service',
             'date',
@@ -30,7 +30,6 @@ class EmergencyContactForm(forms.ModelForm):
 
     class Meta:
         model = EmergencyContact
-
         fields = [
             'name',
             'relationship',
@@ -50,4 +49,3 @@ class EmergencyContactForm(forms.ModelForm):
                 'type': 'tel'
             }),
         }
-
