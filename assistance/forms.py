@@ -1,5 +1,6 @@
 from django import forms
 from .models import AssistanceRequest
+from .models import AssistanceRequest, EmergencyContact
 
 
 class AssistanceRequestForm(forms.ModelForm):
@@ -28,4 +29,19 @@ class AssistanceRequestForm(forms.ModelForm):
                     'placeholder': 'Describe the assistance you need...'
                 }
             ),
+        }
+         model = EmergencyContact
+        fields = ['name', 'relationship', 'phone', 'is_primary']
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Enter contact name'
+            }),
+            'relationship': forms.TextInput(attrs={
+                'placeholder': 'e.g. Mother, Father, Guardian'
+            }),
+            'phone': forms.TextInput(attrs={
+                'placeholder': 'Enter phone number',
+                'type': 'tel'
+            }),
         }
