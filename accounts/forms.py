@@ -8,17 +8,17 @@ class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-    model = User
-    fields = [
-        'username',
-        'first_name',
-        'last_name',
-        'email',
-        'role',
-        'gender',
-        'age',
-        'contact_no',
-    ]
+        model = User
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'role',
+            'gender',
+            'age',
+            'contact_no',
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
