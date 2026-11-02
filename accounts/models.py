@@ -35,7 +35,7 @@ contact_no = models.CharField(
     blank=True
 )
 
-    role = models.CharField(
+role = models.CharField(
         max_length=30,
         choices=ROLE_CHOICES
     )
