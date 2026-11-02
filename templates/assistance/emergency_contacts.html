@@ -1,0 +1,44 @@
+
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>My Emergency Contacts</h2>
+
+<h3>Add Emergency Contact</h3>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Contact</button>
+</form>
+
+<hr>
+
+<h3>Saved Contacts</h3>
+
+{% for contact in contacts %}
+    <div>
+        <p><strong>{{ contact.name }}</strong></p>
+        <p>Relationship: {{ contact.relationship }}</p>
+        <p>Phone: {{ contact.phone }}</p>
+
+        {% if contact.is_primary %}
+            <strong>Primary Contact</strong>
+        {% endif %}
+
+        <a href="{% url 'edit_emergency_contact' contact.id %}">Edit</a>
+
+        <form method="POST" action="{% url 'delete_emergency_contact' contact.id %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+    <hr>
+{% empty %}
+    <p>No emergency contacts added yet.</p>
+{% endfor %}
+
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}
+
