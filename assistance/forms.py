@@ -1,5 +1,5 @@
+
 from django import forms
-from .models import AssistanceRequest
 from .models import AssistanceRequest, EmergencyContact
 
 
@@ -17,21 +17,26 @@ class AssistanceRequestForm(forms.ModelForm):
         ]
 
         widgets = {
-            'date': forms.DateInput(
-                attrs={'type': 'date'}
-            ),
-            'time': forms.TimeInput(
-                attrs={'type': 'time'}
-            ),
-            'description': forms.Textarea(
-                attrs={
-                    'rows': 4,
-                    'placeholder': 'Describe the assistance you need...'
-                }
-            ),
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'time': forms.TimeInput(attrs={'type': 'time'}),
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Describe the assistance you need...'
+            }),
         }
-         model = EmergencyContact
-        fields = ['name', 'relationship', 'phone', 'is_primary']
+
+
+class EmergencyContactForm(forms.ModelForm):
+
+    class Meta:
+        model = EmergencyContact
+
+        fields = [
+            'name',
+            'relationship',
+            'phone',
+            'is_primary'
+        ]
 
         widgets = {
             'name': forms.TextInput(attrs={
@@ -45,3 +50,4 @@ class AssistanceRequestForm(forms.ModelForm):
                 'type': 'tel'
             }),
         }
+
