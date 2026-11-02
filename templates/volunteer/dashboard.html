@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Volunteer Dashboard | Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        h1, h2 {
+            color: #547568;
+        }
+
+        a {
+            color: #547568;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Welcome to Saarthi!</h1>
+
+    <p>Hello, {{ request.user.first_name|default:request.user.username }}</p>
+
+    <div class="card">
+        <h2>Your Volunteer Profile</h2>
+
+        {% if request.user.role == 'nss_volunteer' %}
+            <p>Role: NSS Volunteer</p>
+        {% else %}
+            <p>Role: Community Volunteer</p>
+        {% endif %}
+    </div>
+
+   <div class="card">
+    <h2>Available Services</h2>
+    <p>Explore assistance requests and help people in your community.</p>
+
+    <a href="{% url 'available_requests' %}">
+        View Available Requests →
+    </a>
+</div>
+    <div class="card">
+        <h2>My Activities</h2>
+        <p>Track the assistance requests you accept and complete.</p>
+	<a href="{% url 'volunteer_activities' %}">
+    View My Activities →
+</a>
+    </div>
+
+    <a href="{% url 'logout' %}">Logout</a>
+
+</div>
+
+</body>
+</html>

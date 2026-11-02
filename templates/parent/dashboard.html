@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parent Dashboard | Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        header {
+            background: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 { color: #547568; }
+
+        main { padding: 35px 7%; }
+
+        .welcome {
+            background: #e6eee8;
+            padding: 30px;
+            border-radius: 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 14px;
+        }
+
+        input {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px;
+            border: 1px solid #d8ded9;
+            border-radius: 8px;
+        }
+
+        button {
+            display: block;
+            padding: 12px 22px;
+            margin-top: 12px;
+            background: #668879;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+
+        a { color: #547568; text-decoration: none; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>SAARTHI</h2>
+    <a href="{% url 'logout' %}">Logout</a>
+</header>
+
+<main>
+
+    <section class="welcome">
+        <h1>Welcome, {{ request.user.first_name|default:request.user.username }}!</h1>
+        <p>Stay connected and support your child's independence with Saarthi.</p>
+    </section>
+
+    <section class="card">
+        <h2>Family Connect</h2>
+	<a href="{% url 'family_home' %}">Open Family Connect →</a>
+        <p>Link your child's Saarthi account to get started.</p>
+</section>
+
+    <section class="card">
+        <h2>Journey Updates</h2>
+        <p>Receive updates about journeys when your child has enabled location sharing.</p>
+    </section>
+
+    <section class="card">
+        <h2>Emergency Contacts</h2>
+        <p>Manage the contact information your family chooses to share.</p>
+    </section>
+
+</main>
+</body>
+</html>

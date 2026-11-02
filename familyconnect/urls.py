@@ -1,0 +1,8 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.family_home, name='family_home'),
+    path('connect/', views.connect_parent, name='connect_parent'),
+    path('respond/<int:connection_id>/', views.respond_connection, name='respond_connection'),
+]

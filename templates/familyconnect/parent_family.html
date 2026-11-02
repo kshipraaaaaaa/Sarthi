@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Family Connect | Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        h1, h2 {
+            color: #547568;
+        }
+
+        input {
+            width: 95%;
+            padding: 12px;
+            margin: 12px 0;
+            border: 1px solid #d8ded9;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #668879;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        a {
+            color: #547568;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+
+    <h1>Family Connect</h1>
+    <p>Connect with your child using their invitation code.</p>
+    <div class="card">
+
+        <h2>Enter Invitation Code</h2>
+
+        <form method="POST" action="{% url 'connect_parent' %}">
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="code"
+                placeholder="Enter 8-character code"
+                maxlength="12"
+                required
+            >
+
+            <button type="submit">Send Connection Request</button>
+        </form>
+
+    </div>
+<div class="card">
+
+    <h2>My Connections</h2>
+
+    {% for connection in connections %}
+
+        <p><b>{{ connection.student.first_name|default:connection.student.username }}</b></p>
+        <p>Status: {{ connection.get_status_display }}</p>
+
+        {% if connection.status == 'Approved' %}
+            <p>You are connected with this student.</p>
+        {% elif connection.status == 'Pending' %}
+            <p>Waiting for student approval.</p>
+        {% else %}
+            <p>Connection was rejected.</p>
+        {% endif %}
+
+        <hr>
+
+    {% empty %}
+
+        <p>You haven't connected with a student yet.</p>
+
+    {% endfor %}
+
+</div>
+
+
+<div class="card">
+
+    <h2>Child's Assistance Activities</h2>
+
+    {% for activity in activities %}
+
+        <h3>{{ activity.get_service_display }}</h3>
+
+        <p><b>Date:</b> {{ activity.date }}</p>
+        <p><b>Time:</b> {{ activity.time }}</p>
+        <p><b>Venue:</b> {{ activity.venue }}</p>
+        <p><b>Description:</b> {{ activity.description }}</p>
+        <p><b>Status:</b> {{ activity.get_status_display }}</p>
+
+        <hr>
+
+    {% empty %}
+
+        <p>No assistance activities available yet.</p>
+
+    {% endfor %}
+
+</div>
+</div>
+
+</body>
+</html>

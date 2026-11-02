@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Family Connect | Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        h1, h2 {
+            color: #547568;
+        }
+
+        .code {
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #547568;
+            background: #eaf0ec;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #668879;
+            color: white;
+            cursor: pointer;
+        }
+
+        a {
+            color: #547568;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+
+    <h1>Family Connect</h1>
+    <p>Connect with your parent or caregiver.</p>
+    <a href="{% url 'family_home' %}">Open Family Connect →</a>
+    <div class="card">
+        <h2>Your Invitation Code</h2>
+        <p>Share this code with your parent or caregiver.</p>
+
+        <div class="code">{{ invitation.code }}</div>
+    </div>
+
+    <div class="card">
+        <h2>Connection Requests</h2>
+
+        {% for connection in connections %}
+
+            <p><b>{{ connection.parent.username }}</b></p>
+            <p>Status: {{ connection.get_status_display }}</p>
+
+            {% if connection.status == 'Pending' %}
+
+                <form method="POST"
+                      action="{% url 'respond_connection' connection.id %}">
+                    {% csrf_token %}
+
+                    <button name="action" value="approve">
+                        Approve
+                    </button>
+
+                    <button name="action" value="reject">
+                        Reject
+                    </button>
+                </form>
+
+            {% endif %}
+
+            <hr>
+
+        {% empty %}
+
+            <p>No parent connection requests yet.</p>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

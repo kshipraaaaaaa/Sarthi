@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Volunteer Activities | Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        h1, h2 {
+            color: #547568;
+        }
+
+        a {
+            color: #547568;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'dashboard' %}">← Dashboard</a>
+
+    <h1>My Volunteer Activities</h1>
+
+    {% for activity in activities %}
+
+    <div class="card">
+
+        <h2>{{ activity.get_service_display }}</h2>
+
+        <p><b>Date:</b> {{ activity.date }}</p>
+        <p><b>Time:</b> {{ activity.time }}</p>
+        <p><b>Venue:</b> {{ activity.venue }}</p>
+        <p><b>Status:</b> {{ activity.get_status_display }}</p>
+
+    </div>
+
+    {% empty %}
+
+    <div class="card">
+        <h2>No activities yet</h2>
+        <p>Requests you accept will appear here.</p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
