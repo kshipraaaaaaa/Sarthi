@@ -36,9 +36,9 @@ def user_login(request):
         username=username,
         password=password
     )
-    except Exception:
-        logger.exception("SAARTHI LOGIN AUTHENTICATION FAILED")
-        raise
+        except Exception:
+            logger.exception("SAARTHI LOGIN AUTHENTICATION FAILED")
+            raise
         if user is not None:
             login(request, user)
             return redirect('dashboard')
