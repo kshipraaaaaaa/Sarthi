@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contacts | Saarthi</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 30px 15px;
+            color: #263445;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin: 18px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        h1, h2 {
+            color: #234b70;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 7px 0 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button, .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #286b91;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 4px;
+        }
+
+        .delete {
+            background: #c0392b;
+        }
+
+        .primary {
+            color: #16804a;
+            font-weight: bold;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 15px;
+            color: #286b91;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Emergency Contacts</h1>
+    <p>Keep your trusted people close in case of an emergency.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <h2>Add Emergency Contact</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Contact</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>My Saved Contacts</h2>
+
+        {% for contact in contacts %}
+            <div style="border-bottom:1px solid #eee; padding:15px 0;">
+
+                <h3>{{ contact }}</h3>
+
+                {% if contact.is_primary %}
+                    <p class="primary">Primary Contact</p>
+                {% endif %}
+
+                <a class="btn"
+                   href="{% url 'edit_emergency_contact' contact.id %}">
+                    Edit
+                </a>
+
+                <form method="POST"
+                      action="{% url 'delete_emergency_contact' contact.id %}"
+                      style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete"
+                            onclick="return confirm('Delete this contact?');">
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+        {% empty %}
+            <p>No emergency contacts added yet.</p>
+        {% endfor %}
+    </div>
+
+    <a class="back" href="{% url 'dashboard' %}">
+        ← Back to Dashboard
+    </a>
+
+</div>
+</body>
+</html>
