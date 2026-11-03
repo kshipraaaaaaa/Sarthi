@@ -29,13 +29,13 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        
         try:
-        user = authenticate(
-        request,
-        username=username,
-        password=password
-    )
+            user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
         except Exception:
             logger.exception("SAARTHI LOGIN AUTHENTICATION FAILED")
             raise
