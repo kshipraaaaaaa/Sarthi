@@ -4,7 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegistrationForm
 
+import logging
 
+logger = logging.getLogger(__name__)
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -28,12 +30,15 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
-
+        try:
+    user = authenticate(
+        request,
+        username=username,
+        password=password
+    )
+    except Exception:
+        logger.exception("SAARTHI LOGIN AUTHENTICATION FAILED")
+        raise
         if user is not None:
             login(request, user)
             return redirect('dashboard')
