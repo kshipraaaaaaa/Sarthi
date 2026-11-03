@@ -216,17 +216,24 @@ def parent_location(request):
     if request.user.role != 'parent':
         return redirect('dashboard')
 
-    connections = FamilyConnection.objects.filter(
-        parent=request.user,
-        status='Approved'
-    ).select_related('student')
+    try:
+        connections = FamilyConnection.objects.filter(
+            parent=request.user,
+            status='Approved'
+        ).select_related('student')
 
-    for connection in connections:
-        sharing, created = LocationSharing.objects.get_or_create(
-            student=connection.student
+        for connection in connections:
+            sharing, created = LocationSharing.objects.get_or_create(
+                student=connection.student
+            )
+            connection.sharing = sharing
+
+        return render(request, 'parent/parent_location.html', {
+            'connections': connections
+        })
+
+    except Exception as e:
+        return HttpResponse(
+            f"Error: {type(e).__name__}: {e}",
+            status=500
         )
-        connection.sharing = sharing
-
-    return render(request, 'parent/parent_location.html', {
-        'connections': connections
-    })
