@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Journey Updates | Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        h1, h2, h3 {
+            color: #547568;
+        }
+
+        p {
+            color: #66736c;
+            line-height: 1.6;
+        }
+
+        .location-box {
+            background: #e6eee8;
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #668879;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .back {
+            color: #547568;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a class="back" href="{% url 'dashboard' %}">← Back to Dashboard</a>
+
+    <h1>Journey Updates</h1>
+
+    <p>
+        View the location shared by your connected students.
+        Location is visible only when the student has enabled sharing.
+    </p>
+
+    {% for connection in connections %}
+
+        <div class="card">
+
+            <h2>
+                {{ connection.student.first_name|default:connection.student.username }}
+            </h2>
+
+            {% if connection.student.location_sharing.is_enabled and connection.student.location_sharing.latitude != None and connection.student.location_sharing.longitude != None %}
+
+                <div class="location-box">
+
+                    <h3>Location Available</h3>
+
+                    <p>Your child is sharing their location.</p>
+
+                    <a
+                        class="button"
+                        href="https://www.google.com/maps?q={{ connection.student.location_sharing.latitude }},{{ connection.student.location_sharing.longitude }}"
+                        target="_blank"
+                        rel="noopener">
+                        View on Google Maps →
+                    </a>
+
+                    <p>
+                        Last updated:
+                        {{ connection.student.location_sharing.updated_at|date:"d M Y, h:i A" }}
+                    </p>
+
+                </div>
+
+            {% else %}
+
+                <div class="location-box">
+                    <h3>Location Unavailable</h3>
+                    <p>
+                        This student has not enabled location sharing
+                        or has turned it off.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <div class="card">
+            <h3>No Approved Connections</h3>
+            <p>Approved student connections will appear here.</p>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
