@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Contacts - Saarthi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <div style="max-width:700px; margin:40px auto; padding:20px;">
+
+        <h1>Emergency Contacts</h1>
+        <p>Add trusted people who can be contacted in an emergency.</p>
+
+        <h2>Add a Contact</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Contact</button>
+        </form>
+
+        <hr>
+
+        <h2>My Saved Contacts</h2>
+
+        {% if contacts %}
+            {% for contact in contacts %}
+                <div style="padding:15px; border:1px solid #ccc; margin:10px 0;">
+                    <h3>{{ contact.name }}</h3>
+                    <p>Relationship: {{ contact.relationship }}</p>
+                    <p>Phone: {{ contact.phone }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No emergency contacts added yet.</p>
+        {% endif %}
+
+        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+
+    </div>
+
+</body>
+</html>
