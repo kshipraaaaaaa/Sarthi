@@ -57,7 +57,7 @@ class FamilyConnection(models.Model):
         return f"{self.parent.username} - {self.student.username}"
 
     
-    class LocationSharing(models.Model):
+class LocationSharing(models.Model):
         student = models.OneToOneField(
             settings.AUTH_USER_MODEL,
             on_delete=models.CASCADE,
