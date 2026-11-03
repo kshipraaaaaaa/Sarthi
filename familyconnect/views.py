@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.crypto import get_random_string
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from assistance.models import AssistanceRequest
 from .models import FamilyInvitation, FamilyConnection, LocationSharing
