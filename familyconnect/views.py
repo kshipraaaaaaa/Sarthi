@@ -221,10 +221,11 @@ def parent_location(request):
     ).select_related('student')
 
     for connection in connections:
-        LocationSharing.objects.get_or_create(
+        sharing, created = LocationSharing.objects.get_or_create(
             student=connection.student
         )
+        connection.sharing = sharing
 
     return render(request, 'parent/parent_location.html', {
-    'connections': connections
-})
+        'connections': connections
+    })
