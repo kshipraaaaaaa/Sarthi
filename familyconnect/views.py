@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.crypto import get_random_string
 from assistance.models import AssistanceRequest
-from .models import FamilyInvitation, FamilyConnection
-
+from .models import FamilyInvitation, FamilyConnection, LocationSharing
+from django.http import JsonResponse
 
 def generate_code():
     return get_random_string(8).upper()
@@ -135,3 +135,55 @@ def respond_connection(request, connection_id):
         connection.save()
 
     return redirect('family_home')
+@login_required
+def location_sharing(request):
+
+    if request.user.role != 'student':
+        return redirect('dashboard')
+
+    sharing, created = LocationSharing.objects.get_or_create(
+        student=request.user
+    )
+
+    return render(request, 'student/location_sharing.html', {
+        'sharing': sharing
+    })
+
+
+@login_required
+def update_location(request):
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Invalid request.'}, status=405)
+
+    if request.user.role != 'student':
+        return JsonResponse({'success': False, 'message': 'Not authorized.'}, status=403)
+
+    sharing, created = LocationSharing.objects.get_or_create(
+        student=request.user
+    )
+
+    enabled = request.POST.get('is_enabled') == 'true'
+
+    sharing.is_enabled = enabled
+
+    if enabled:
+        try:
+            sharing.latitude = float(request.POST.get('latitude'))
+            sharing.longitude = float(request.POST.get('longitude'))
+        except (TypeError, ValueError):
+            return JsonResponse({
+                'success': False,
+                'message': 'Valid location coordinates are required.'
+            }, status=400)
+    else:
+        sharing.latitude = None
+        sharing.longitude = None
+
+    sharing.save()
+
+    return JsonResponse({
+        'success': True,
+        'is_enabled': sharing.is_enabled,
+        'message': 'Location sharing updated successfully.'
+    })
