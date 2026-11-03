@@ -55,3 +55,19 @@ class FamilyConnection(models.Model):
 
     def __str__(self):
         return f"{self.parent.username} - {self.student.username}"
+
+    
+    class LocationSharing(models.Model):
+        student = models.OneToOneField(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.CASCADE,
+            related_name='location_sharing'
+        )
+    
+        is_enabled = models.BooleanField(default=False)
+        latitude = models.FloatField(null=True, blank=True)
+        longitude = models.FloatField(null=True, blank=True)
+        updated_at = models.DateTimeField(auto_now=True)
+    
+        def __str__(self):
+            return f"Location sharing - {self.student.username}"
