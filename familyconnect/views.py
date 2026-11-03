@@ -225,6 +225,6 @@ def parent_location(request):
             student=connection.student
         )
 
-    return render(request, 'familyconnect/parent_location.html', {
-        'connections': connections
-    })
+    return render(request, 'parent/location_sharing.html', {
+    'connections': connections
+})
