@@ -155,7 +155,7 @@ def emergency_contacts(request):
     else:
         form = EmergencyContactForm()
 
-    return render(request, 'assistance/emergency_contacts.html', {
+    return render(request, 'student/emergency_contacts.html', {
         'contacts': contacts,
         'form': form
     })
