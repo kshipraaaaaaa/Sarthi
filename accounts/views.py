@@ -31,7 +31,7 @@ def user_login(request):
         password = request.POST.get('password')
 
         try:
-    user = authenticate(
+        user = authenticate(
         request,
         username=username,
         password=password
