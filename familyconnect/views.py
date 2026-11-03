@@ -210,5 +210,23 @@ def update_location(request):
 
 
 
+@login_required
 def parent_location(request):
-    return HttpResponse("Parent Location view is working!")
+
+    if request.user.role != 'parent':
+        return redirect('dashboard')
+
+    connections = FamilyConnection.objects.filter(
+        parent=request.user,
+        status='Approved'
+    ).select_related('student')
+
+    for connection in connections:
+        sharing, created = LocationSharing.objects.get_or_create(
+            student=connection.student
+        )
+        connection.sharing = sharing
+
+    return render(request, 'parent/parent_location.html', {
+        'connections': connections
+    })
