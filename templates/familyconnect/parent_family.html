@@ -49,6 +49,22 @@
         a {
             color: #547568;
         }
+        .location-box {
+            background: #e6eee8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        
+        .location-box h3 {
+            color: #547568;
+        }
+        
+        .location-box a {
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -89,12 +105,35 @@
         <p>Status: {{ connection.get_status_display }}</p>
 
         {% if connection.status == 'Approved' %}
-            <p>You are connected with this student.</p>
-        {% elif connection.status == 'Pending' %}
-            <p>Waiting for student approval.</p>
-        {% else %}
-            <p>Connection was rejected.</p>
-        {% endif %}
+    <p>You are connected with this student.</p>
+
+    {% if connection.student.location_sharing.is_enabled and connection.student.location_sharing.latitude != None and connection.student.location_sharing.longitude != None %}
+
+        <div class="location-box">
+            <h3>Student Location</h3>
+
+            <p>Location sharing is ON.</p>
+
+            <p>
+                Latitude: {{ connection.student.location_sharing.latitude }}
+            </p>
+
+            <p>
+                Longitude: {{ connection.student.location_sharing.longitude }}
+            </p>
+
+            <a
+                href="https://www.google.com/maps?q={{ connection.student.location_sharing.latitude }},{{ connection.student.location_sharing.longitude }}"
+                target="_blank"
+                rel="noopener"
+            >
+                View Location on Google Maps
+            </a>
+        </div>
+
+    {% else %}
+        <p>Location is not currently being shared.</p>
+    {% endif %}
 
         <hr>
 
