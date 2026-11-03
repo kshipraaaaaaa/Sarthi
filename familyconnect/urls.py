@@ -7,4 +7,5 @@ urlpatterns = [
     path('respond/<int:connection_id>/', views.respond_connection, name='respond_connection'),
     path('location-sharing/', views.location_sharing, name='location_sharing'),
     path('update-location/', views.update_location, name='update_location'),
+    path('parent-location/', views.parent_location, name='parent_location'),
 ]
