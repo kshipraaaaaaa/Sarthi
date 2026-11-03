@@ -4,131 +4,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency Contacts | Saarthi</title>
+    <title>Edit Emergency Contact | Saarthi</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 30px 15px;
-            color: #263445;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f3f6fb;
+            color: #26364a;
+        }
+
+        .navbar {
+            background: #173f67;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
         }
 
         .container {
-            max-width: 750px;
-            margin: auto;
+            max-width: 650px;
+            margin: 55px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            color: #173f67;
+            font-size: 29px;
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: #718096;
+            line-height: 1.6;
         }
 
         .card {
             background: white;
-            padding: 22px;
-            margin: 18px 0;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 22px rgba(30, 60, 90, 0.07);
         }
 
-        h1, h2 {
-            color: #234b70;
+        .card h2 {
+            color: #173f67;
+            font-size: 20px;
+            margin-bottom: 22px;
+        }
+
+        form p {
+            margin-bottom: 17px;
+        }
+
+        form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: #42566d;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 10px;
-            margin: 7px 0 15px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 12px 14px;
+            border: 1px solid #d9e2ec;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fbfdff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3984bb;
+            box-shadow: 0 0 0 3px rgba(57,132,187,0.12);
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
         }
 
         button, .btn {
-            display: inline-block;
-            padding: 10px 16px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 6px;
-            background: #286b91;
-            color: white;
-            text-decoration: none;
+            border-radius: 8px;
             cursor: pointer;
-            margin: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
         }
 
-        .delete {
-            background: #c0392b;
+        .save-btn {
+            background: #246b9b;
+            color: white;
         }
 
-        .primary {
-            color: #16804a;
-            font-weight: bold;
+        .save-btn:hover {
+            background: #174f78;
         }
 
-        .back {
-            display: inline-block;
-            margin-top: 15px;
-            color: #286b91;
+        .cancel-btn {
+            background: #e8eef5;
+            color: #42566d;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #8795a5;
+            font-size: 13px;
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                margin: 35px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .heading h1 {
+                font-size: 25px;
+            }
         }
     </style>
 </head>
 
 <body>
-<div class="container">
 
-    <h1>Emergency Contacts</h1>
-    <p>Keep your trusted people close in case of an emergency.</p>
+    <nav class="navbar">
+        <div class="logo">SAARTHI</div>
+        <a href="{% url 'emergency_contacts' %}">← Back to Contacts</a>
+    </nav>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+    <main class="container">
 
-    <div class="card">
-        <h2>Add Emergency Contact</h2>
+        <div class="heading">
+            <h1>Edit Emergency Contact</h1>
+            <p>Keep your trusted contact information accurate and up to date.</p>
+        </div>
 
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save Contact</button>
-        </form>
-    </div>
+        <div class="card">
+            <h2>Update Contact Details</h2>
 
-    <div class="card">
-        <h2>My Saved Contacts</h2>
+            <form method="POST">
+                {% csrf_token %}
 
-        {% for contact in contacts %}
-            <div style="border-bottom:1px solid #eee; padding:15px 0;">
+                {{ form.as_p }}
 
-                <h3>{{ contact }}</h3>
-
-                {% if contact.is_primary %}
-                    <p class="primary">Primary Contact</p>
-                {% endif %}
-
-                <a class="btn"
-                   href="{% url 'edit_emergency_contact' contact.id %}">
-                    Edit
-                </a>
-
-                <form method="POST"
-                      action="{% url 'delete_emergency_contact' contact.id %}"
-                      style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="delete"
-                            onclick="return confirm('Delete this contact?');">
-                        Delete
+                <div class="buttons">
+                    <button type="submit" class="save-btn">
+                        Save Changes
                     </button>
-                </form>
 
-            </div>
-        {% empty %}
-            <p>No emergency contacts added yet.</p>
-        {% endfor %}
-    </div>
+                    <a href="{% url 'emergency_contacts' %}"
+                       class="btn cancel-btn">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
 
-    <a class="back" href="{% url 'dashboard' %}">
-        ← Back to Dashboard
-    </a>
+    </main>
 
-</div>
+    <footer class="footer">
+        Saarthi · Every Ability. Every Opportunity.
+    </footer>
+
 </body>
 </html>
