@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Sharing | Saarthi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f4f0;
+            color: #35423d;
+        }
+
+        header {
+            background: white;
+            padding: 20px 7%;
+        }
+
+        header h2 {
+            color: #547568;
+            margin: 0;
+        }
+
+        main {
+            padding: 35px 7%;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 650px;
+        }
+
+        h1, h3 {
+            color: #547568;
+        }
+
+        p {
+            color: #66736c;
+            line-height: 1.6;
+        }
+
+        .status {
+            background: #e6eee8;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        button {
+            background: #668879;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        a {
+            color: #547568;
+            text-decoration: none;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Saarthi</h2>
+</header>
+
+<main>
+    <div class="card">
+
+        <h1>Location Sharing</h1>
+
+        <p>
+            Share your live location with your approved family members
+            so they can know where you are when you need assistance.
+        </p>
+
+        <div class="status">
+            <h3>Sharing Status</h3>
+
+            <p id="statusText">
+                {% if sharing.is_enabled %}
+                    Location sharing is ON.
+                {% else %}
+                    Location sharing is OFF.
+                {% endif %}
+            </p>
+        </div>
+
+        {% csrf_token %}
+
+        <button id="toggleButton" onclick="toggleSharing()">
+            {% if sharing.is_enabled %}
+                Turn OFF Location Sharing
+            {% else %}
+                Turn ON Location Sharing
+            {% endif %}
+        </button>
+
+        <p id="message"></p>
+
+        <p>
+            Your browser will ask permission to access your location.
+            You can turn sharing off whenever you want.
+        </p>
+
+        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+
+    </div>
+</main>
+
+<script>
+    const isCurrentlyEnabled = {{ sharing.is_enabled|yesno:"true,false" }};
+
+    let sharingEnabled = isCurrentlyEnabled;
+
+    const button = document.getElementById("toggleButton");
+    const statusText = document.getElementById("statusText");
+    const message = document.getElementById("message");
+
+    function toggleSharing() {
+
+        if (sharingEnabled) {
+            sendLocation(false);
+            return;
+        }
+
+        if (!navigator.geolocation) {
+            message.textContent = "Your browser does not support location sharing.";
+            return;
+        }
+
+        message.textContent = "Requesting your location...";
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                sendLocation(
+                    true,
+                    position.coords.latitude,
+                    position.coords.longitude
+                );
+            },
+            function(error) {
+                message.textContent =
+                    "Unable to access your location. Please allow location permission.";
+            }
+        );
+    }
+
+    function sendLocation(enabled, latitude = "", longitude = "") {
+
+        button.disabled = true;
+
+        const csrfToken = document.querySelector(
+            '[name=csrfmiddlewaretoken]'
+        ).value;
+
+        const data = new URLSearchParams();
+
+        data.append("is_enabled", enabled);
+        data.append("latitude", latitude);
+        data.append("longitude", longitude);
+
+        fetch("{% url 'update_location' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: data,
+            credentials: "same-origin"
+        })
+        .then(response => response.json())
+        .then(result => {
+
+            if (!result.success) {
+                throw new Error(result.message);
+            }
+
+            sharingEnabled = result.is_enabled;
+
+            if (sharingEnabled) {
+                statusText.textContent = "Location sharing is ON.";
+                button.textContent = "Turn OFF Location Sharing";
+                message.textContent = "Your location has been shared successfully.";
+            } else {
+                statusText.textContent = "Location sharing is OFF.";
+                button.textContent = "Turn ON Location Sharing";
+                message.textContent = "Location sharing has been turned off.";
+            }
+        })
+        .catch(error => {
+            message.textContent = error.message || "Something went wrong.";
+        })
+        .finally(() => {
+            button.disabled = false;
+        });
+    }
+</script>
+
+</body>
+</html>
