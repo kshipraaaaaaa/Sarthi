@@ -209,6 +209,6 @@ def update_location(request):
     })
 
 
-@login_required
+
 def parent_location(request):
     return HttpResponse("Parent Location view is working!")
